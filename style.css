@@ -1,0 +1,12 @@
+body {
+  font-family:'Courier New', Courier, monospace;
+  text-align: center;
+}
+
+#board {
+  background-color: lightgray;
+  border-bottom: 1px solid black;
+ background-image: url("./img/full-background.png");
+ background-size: cover;
+ 
+}
