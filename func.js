@@ -68,3 +68,89 @@ document.addEventListener('keydown', event => {
       
   }
 });
+
+let obstacleArray = [];
+
+let obstacle1Width = 34;
+let obstacle2Width = 69;
+let obstacle3Width = 102;
+
+let obstacleHeight = 70;
+let obstacleX = GAME_WIDTH;
+let obstacleY = GAME_HEIGHT - obstacleHeight;
+
+let obstacle1Img;
+let obstacle2Img;
+let obstacle3Img;
+
+let velocityX = -8;
+let gameOver = false;
+
+window.onload = function() {
+    obstacle1Img = new Image();
+    obstacle1Img.src = "./img/spike_B.png";
+
+    obstacle2Img = new Image();
+    obstacle2Img.src = "./img/spike_C.png";
+
+    obstacle3Img = new Image();
+    obstacle3Img.src = "./img/spike_D.png";
+
+    requestAnimationFrame(update);
+    setInterval(placeObstacle, 1000);
+}
+
+function update() {
+    requestAnimationFrame(update);
+    if (gameOver) {
+        return;
+    }
+    ctx.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
+
+    for (let i = 0; i < obstacleArray.length; i++) {
+        let obstacle = obstacleArray[i];
+        obstacle.x += velocityX;
+        ctx.drawImage(obstacle.img, obstacle.x, obstacle.y, obstacle.width, obstacle.height);
+    }
+}
+
+function placeObstacle() {
+    if (gameOver) {
+        return;
+    }
+
+    let obstacle = {
+        img: null,
+        x: obstacleX,
+        y: obstacleY,
+        width: null,
+        height: obstacleHeight
+    };
+
+    let placeObstacleChance = Math.random();
+
+    if (placeObstacleChance > .90) {
+        obstacle.img = obstacle3Img;
+        obstacle.width = obstacle3Width;
+        obstacleArray.push(obstacle);
+    } else if (placeObstacleChance > .70) {
+        obstacle.img = obstacle2Img;
+        obstacle.width = obstacle2Width;
+        obstacleArray.push(obstacle);
+    } else if (placeObstacleChance > .50) {
+        obstacle.img = obstacle1Img;
+        obstacle.width = obstacle1Width;
+        obstacleArray.push(obstacle);
+    }
+
+    if (obstacleArray.length > 5) {
+        obstacleArray.shift();
+    }
+}
+
+function detectCollision(a, b) {
+    return a.x < b.x + b.width &&
+           a.x + a.width > b.x &&
+           a.y < b.y + b.height &&
+           a.y + a.height > b.y;
+}
