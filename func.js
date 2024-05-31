@@ -5,6 +5,8 @@ let ctx;
 
 let obstacleArray = [];
 
+let highScore = 0;
+
 let obstacle1Width = 34;
 let obstacle2Width = 69;
 let obstacle3Width = 102;
@@ -54,13 +56,13 @@ window.onload = function () {
   }
 
   obstacle1Img = new Image();
-  obstacle1Img.src = "./img/spike_B.png";
+  obstacle1Img.src = "./img/spike_D.png";
 
   obstacle2Img = new Image();
   obstacle2Img.src = "./img/spike_C.png";
 
   obstacle3Img = new Image();
-  obstacle3Img.src = "./img/spike_D.png";
+  obstacle3Img.src = "./img/spike_B.png";
 
   requestAnimationFrame(update);
   setInterval(placeObstacle, 1000);
@@ -70,6 +72,7 @@ window.onload = function () {
 function update() {
   requestAnimationFrame(update);
   if (gameOver) {
+    showRestartMessage();
     return;
   }
   ctx.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
@@ -98,10 +101,12 @@ function update() {
   player.y = Math.min(player.y + velocityY, playerY);
   ctx.drawImage(playerImg, player.x, player.y, player.width, player.height);
 
+  // Update and center score
   ctx.fillStyle = "black";
   ctx.font = "20px courier";
+  ctx.textAlign = "center"; // Center the text
+  ctx.fillText(score, GAME_WIDTH / 2, 30); // Position the text at the center top
   score++;
-  ctx.fillText(score, 5, 20);
 }
 
 function movePlayer(e) {
@@ -114,8 +119,15 @@ function movePlayer(e) {
   }
 }
 
+document.addEventListener("keydown", function (e) {
+  if (gameOver && (e.code == "Space" || e.code == "ArrowUp")) {
+    restartGame();
+  }
+});
+
 function placeObstacle() {
   if (gameOver) {
+    showRestartMessage();
     return;
   }
 
@@ -153,4 +165,32 @@ function detectCollision(a, b) {
     a.x + a.width > b.x &&
     a.y < b.y + b.height &&
     a.y + a.height > b.y;
+}
+
+function showRestartMessage() {
+  ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
+  ctx.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
+
+  ctx.fillStyle = "white";
+  ctx.font = "40px courier";
+  ctx.textAlign = "center";
+  ctx.fillText("Game Over", GAME_WIDTH / 2, GAME_HEIGHT / 2 - 100);
+  
+  ctx.font = "20px courier";
+  ctx.fillText("Score: " + score, GAME_WIDTH / 2, GAME_HEIGHT / 2 - 50);
+  ctx.fillText("High Score: " + highScore, GAME_WIDTH / 2, GAME_HEIGHT / 2);
+  ctx.fillText("Press Space to Try Again", GAME_WIDTH / 2, GAME_HEIGHT / 2 + 50);
+}
+
+function restartGame() {
+  if (score > highScore) {
+    highScore = score;
+  }
+  gameOver = false;
+  score = 0;
+  obstacleArray = [];
+  player.x = playerX;
+  player.y = playerY;
+  playerImg.src = "./img/player.png";
+  bgMusic.play();
 }
