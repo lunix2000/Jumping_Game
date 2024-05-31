@@ -42,5 +42,5 @@ showStartGameText()
 
 
 function clearText() {
-  ctx.clearRect(80, 100, 550, 350); // Clear the rectangle where the text is drawn
+  ctx.clearRect(80, 100, 550, 350); 
 }
