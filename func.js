@@ -16,7 +16,7 @@ function showStartGameText() {
 
 
   const textLines = [
-    "Step into a world where you control a fearless  Guy ",
+    "Welcome, Step into a world where you control a fearless  Guy ",
     "on a thrilling, action-packed adventure.",
     "Your mission: jump over obstacles, avoid perilous pitfalls,",
     "and outsmart predators to survive as long as possible in this",
