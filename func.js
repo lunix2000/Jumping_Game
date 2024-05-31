@@ -6,10 +6,12 @@ let ctx;
 let obstacleArray = [];
 
 let highScore = 0;
+let soundPlayed = false;
 
 let obstacle1Width = 34;
 let obstacle2Width = 69;
 let obstacle3Width = 102;
+let obstacle4Width = 102;
 
 let obstacleHeight = 70;
 let obstacleX = GAME_WIDTH;
@@ -18,6 +20,7 @@ let obstacleY = GAME_HEIGHT - obstacleHeight - 95;
 let obstacle1Img;
 let obstacle2Img;
 let obstacle3Img;
+let obstacle4Img;
 
 let velocityX = -8;
 let velocityY = 0;
@@ -64,6 +67,9 @@ window.onload = function () {
   obstacle3Img = new Image();
   obstacle3Img.src = "./img/spike_B.png";
 
+  obstacle4Img = new Image();
+  obstacle4Img.src = "./img/bee.png";
+
   requestAnimationFrame(update);
   setInterval(placeObstacle, 1000);
   document.addEventListener("keydown", movePlayer);
@@ -75,6 +81,11 @@ function update() {
     showRestartMessage();
     return;
   }
+
+  if (!soundPlayed) {
+    playerHit.play();
+    soundPlayed = true;
+  }
   ctx.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
 
   bgMusic.volume = 0.1;
@@ -85,12 +96,12 @@ function update() {
     obstacle.x += velocityX;
     ctx.drawImage(obstacle.img, obstacle.x, obstacle.y, obstacle.width, obstacle.height);
 
-    if (detectCollision(player, obstacle)) {
+    if (detectCollision(player, obstacle) && !gameOver) {
       gameOver = true;
       playerImg.src = "./img/gothit.png";
       playerImg.onload = function () {
         ctx.drawImage(playerImg, player.x, player.y, player.width, player.height);
-        playerHit.play();
+        playerHit.play();  // Ensure the sound plays on collision
         bgMusic.pause();
         bgMusic.currentTime = 0;
       }
@@ -142,14 +153,19 @@ function placeObstacle() {
   let placeObstacleChance = Math.random();
 
   if (placeObstacleChance > .90) {
+    obstacle.img = obstacle4Img;
+    obstacle.width = obstacle4Width;
+    obstacle.y = GAME_HEIGHT - obstacleHeight - 200;
+    obstacleArray.push(obstacle);
+  } else if (placeObstacleChance > .75) {
     obstacle.img = obstacle3Img;
     obstacle.width = obstacle3Width;
     obstacleArray.push(obstacle);
-  } else if (placeObstacleChance > .70) {
+  } else if (placeObstacleChance > .60) {
     obstacle.img = obstacle2Img;
     obstacle.width = obstacle2Width;
     obstacleArray.push(obstacle);
-  } else if (placeObstacleChance > .50) {
+  } else if (placeObstacleChance > .40) {
     obstacle.img = obstacle1Img;
     obstacle.width = obstacle1Width;
     obstacleArray.push(obstacle);
@@ -193,4 +209,5 @@ function restartGame() {
   player.y = playerY;
   playerImg.src = "./img/player.png";
   bgMusic.play();
+  soundPlayed = false;
 }
