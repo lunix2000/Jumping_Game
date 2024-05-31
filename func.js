@@ -6,14 +6,13 @@ const GAME_HEIGHT = 700;
 canvas.height = GAME_HEIGHT;
 canvas.width = GAME_WIDTH;
 
+const bgMusic = document.getElementById("background-music");
 
 function showStartGameText() {
   ctx.font = "20px Arial";
   ctx.fillStyle = "white";
   ctx.fillRect(80, 100, 600, 350); 
   ctx.fillStyle = "black";
-
-
 
   const textLines = [
     "Welcome, Step into a world where you control a fearless  Guy ",
@@ -35,12 +34,37 @@ function showStartGameText() {
   }
 }
 
-showStartGameText()
-
-
-
-
+showStartGameText();
 
 function clearText() {
-  ctx.clearRect(80, 100, 550, 350); // Clear the rectangle where the text is drawn
+  ctx.clearRect(80, 100, 550, 350); 
 }
+
+
+
+
+function stopMusic() {
+  bgMusic.pause();
+  bgMusic.currentTime = 0; 
+}
+
+function startGame() {
+  
+  bgMusic.play();
+}
+
+document.addEventListener('keydown', event => {
+  if (event.code === 'Space') {
+    startGame(); 
+
+      
+  }
+});
+
+document.addEventListener('keydown', event => {
+  if (event.code === 'Enter') {
+    stopMusic()
+
+      
+  }
+});
