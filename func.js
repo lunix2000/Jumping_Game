@@ -97,7 +97,7 @@ function update() {
       playerImg.onload = function () {
         ctx.drawImage(playerImg, player.x, player.y, player.width, player.height);
       }
-      playerHit.play();  // Ensure the sound plays on collision
+      playerHit.play();
       bgMusic.pause();
       bgMusic.currentTime = 0;
     }
@@ -107,11 +107,10 @@ function update() {
   player.y = Math.min(player.y + velocityY, playerY);
   ctx.drawImage(playerImg, player.x, player.y, player.width, player.height);
 
-  // Update and center score
   ctx.fillStyle = "black";
   ctx.font = "20px courier";
-  ctx.textAlign = "center"; // Center the text
-  ctx.fillText(score, GAME_WIDTH / 2, 30); // Position the text at the center top
+  ctx.textAlign = "center";
+  ctx.fillText(score, GAME_WIDTH / 2, 30);
   score++;
 }
 
