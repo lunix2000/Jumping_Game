@@ -6,6 +6,7 @@ let ctx;
 let obstacleArray = [];
 
 let highScore = 0;
+let gameStarted = false;
 
 let obstacle1Width = 34;
 let obstacle2Width = 69;
@@ -75,6 +76,15 @@ window.onload = function () {
   document.addEventListener("keydown", movePlayer);
 }
 
+window.addEventListener("click", startGame, { once: true });
+window.addEventListener("keydown", startGame, { once: true });
+
+function startGame() {
+  gameStarted = true;
+  bgMusic.volume = 0.1;
+  bgMusic.play();
+}
+
 function update() {
   requestAnimationFrame(update);
   if (gameOver) {
@@ -82,9 +92,6 @@ function update() {
   }
 
   ctx.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
-
-  bgMusic.volume = 0.1;
-  bgMusic.play();
 
   for (let i = 0; i < obstacleArray.length; i++) {
     let obstacle = obstacleArray[i];
@@ -113,6 +120,7 @@ function update() {
   ctx.fillText(score, GAME_WIDTH / 2, 30);
   score++;
 }
+
 
 function movePlayer(e) {
   if (gameOver) {
