@@ -6,7 +6,6 @@ let ctx;
 let obstacleArray = [];
 
 let highScore = 0;
-let soundPlayed = false;
 
 let obstacle1Width = 34;
 let obstacle2Width = 69;
@@ -41,11 +40,12 @@ let player = {
   height: playerHeight
 }
 
-const bgMusic = document.getElementById("background-music");
-const playerHit = document.getElementById("damage-sfx");
+let bgMusic;
+let playerHit;
 
 window.onload = function () {
-
+  bgMusic = document.getElementById("background-music");
+  playerHit = document.getElementById("damage-sfx");
   canvas = document.getElementById("board");
   ctx = canvas.getContext("2d");
 
@@ -78,14 +78,9 @@ window.onload = function () {
 function update() {
   requestAnimationFrame(update);
   if (gameOver) {
-    showRestartMessage();
     return;
   }
 
-  if (!soundPlayed) {
-    playerHit.play();
-    soundPlayed = true;
-  }
   ctx.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
 
   bgMusic.volume = 0.1;
@@ -101,10 +96,10 @@ function update() {
       playerImg.src = "./img/gothit.png";
       playerImg.onload = function () {
         ctx.drawImage(playerImg, player.x, player.y, player.width, player.height);
-        playerHit.play();  // Ensure the sound plays on collision
-        bgMusic.pause();
-        bgMusic.currentTime = 0;
       }
+      playerHit.play();  // Ensure the sound plays on collision
+      bgMusic.pause();
+      bgMusic.currentTime = 0;
     }
   }
 
@@ -138,7 +133,7 @@ document.addEventListener("keydown", function (e) {
 
 function placeObstacle() {
   if (gameOver) {
-    showRestartMessage();
+    showRestartMessage()
     return;
   }
 
@@ -191,7 +186,7 @@ function showRestartMessage() {
   ctx.font = "40px courier";
   ctx.textAlign = "center";
   ctx.fillText("Game Over", GAME_WIDTH / 2, GAME_HEIGHT / 2 - 100);
-  
+
   ctx.font = "20px courier";
   ctx.fillText("Score: " + score, GAME_WIDTH / 2, GAME_HEIGHT / 2 - 50);
   ctx.fillText("High Score: " + highScore, GAME_WIDTH / 2, GAME_HEIGHT / 2);
@@ -209,5 +204,4 @@ function restartGame() {
   player.y = playerY;
   playerImg.src = "./img/player.png";
   bgMusic.play();
-  soundPlayed = false;
 }
